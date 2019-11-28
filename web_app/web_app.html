@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js" type="text/javascript"></script>
-		<script src="MQTT-client.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js" type="text/javascript"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src="MQTT-client.js"></script>
 </head>
 <body>
 
@@ -28,8 +29,17 @@
 <p>Click "Place Order" to confirm and send your order to the restaurant.</p>
 
 <button onclick="placeOrder()">Place Order</button>
+<p>Order status:</p<b><p id="status"></p></b>
 <p>Below is a JSON payload submitted via MQTT:</p>
 <p id="order"></p>
+
+<table>
+    <tr>
+        <th>order_id</th>
+        <th>status</th>
+        <th>delivery_address</th>
+    </tr>
+</table>
 
 </body>
 </html>

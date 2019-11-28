@@ -34,6 +34,7 @@ function placeOrder() {
   order_placed: x.elements[12].value };
 
   document.getElementById("order").innerHTML = JSON.stringify(newOrder);
+	document.getElementById("status").innerHTML = newOrder.order_status;
 	onSubmit(JSON.stringify(newOrder));
 }
 
@@ -45,6 +46,15 @@ function onSubmit(payload) {
   message = new Paho.MQTT.Message(payload);
   message.destinationName = "food_orders";
   client.send(message);
+}
+
+function updateTable(payload){
+	var tr;
+	tr = $('<tr/>');
+	tr.append("<td>" + json[0].order_id + "</td>");
+	tr.append("<td>" + json[1].status + "</td>");
+	tr.append("<td>" + json[4].delivery_address + "</td>");
+	$('table').append(tr);
 }
 
 // called when the client connects
