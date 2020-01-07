@@ -15,9 +15,9 @@ function placeOrder() {
 
 	var newOrder = {
 
-  order_id: x.elements[0].value,
+  order_id: "O" + makeid(7),
   order_status: x.elements[1].value,
-  delivery_id: x.elements[2].value,
+  delivery_id: "D" + makeid(7),
   delivery: {
 		delivery_name: x.elements[3].value,
   	delivery_address: x.elements[4].value,
@@ -73,4 +73,15 @@ function onConnectionLost(responseObject) {
 // called when a message arrives
 function onMessageArrived(message) {
   console.log("onMessageArrived:"+message.payloadString);
+}
+
+// called to generate the IDs
+function makeid(length) {
+   var result           = '';
+   var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+   var charactersLength = characters.length;
+   for ( var i = 0; i < length; i++ ) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+   }
+   return result;
 }
