@@ -1,6 +1,6 @@
-// Create a client instance
+// Create a client instance, we create a random id so the broker will allow multiple sessions
 
-client = new Paho.MQTT.Client("broker.mqttdashboard.com", 8000, "clientId");
+client = new Paho.MQTT.Client("broker.mqttdashboard.com", 8000, "clientId" + makeid(3) );
 
 // set callback handlers
 client.onConnectionLost = onConnectionLost;

@@ -29,7 +29,7 @@ private class Database  {
    }
 }
 
-
+// copy any JSON objects on disk into working memory
 void refreshData()  {
     File dir; 
     File [] files;
@@ -47,16 +47,16 @@ void refreshData()  {
       db.orders[i] = json;}  
     }
   }
-
+  
  }
-
+// this is our API class to ensure separation of concerns 
 public class OrderData  {
   
   JSONObject[] getOrdersByStatus(String status)  {
-    
     JSONObject[] ret = new JSONObject[0];
     for(JSONObject order: db.orders){
       if(order != null){
+        
         if(status.contains(order.getString("order_status"))){
         ret = (JSONObject[])append(ret,order);
          }
