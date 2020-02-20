@@ -40,10 +40,9 @@ public class Dashboard_view {
   int chart_spacing = 0;
   int chart_size = 140;
   
-  
   void build_Chart(String chart_name, int val, int val1, int val2, int val3)  {
     Chart chart = cp5.addChart(chart_name)
-               .setPosition(horiz_margin_spacing + chart_spacing, 5*vert_margin_spacing)
+               .setPosition(horiz_margin_spacing + chart_spacing, 5.5*vert_margin_spacing)
                .setSize(chart_size,chart_size)
                .setRange(0, 10)
                .setView(int( random(6) ) + 1); // see http://www.sojamo.com/libraries/controlP5/reference/controlP5/Chart.html
@@ -88,12 +87,16 @@ public class Dashboard_view {
     
     if(is_expanded == 1){
     cp5.get("Expanded order").remove();
+    cp5.get("ready").remove();
+    cp5.get("accept").remove();
+    cp5.get("cancel").remove();
     is_expanded = 0;
+    button_state = 0; // this ensures that the creation of buttons aren't reported for call backs
   } 
     
     ListBox order = cp5.addListBox("Expanded order")
-         .setPosition((3*horiz_margin_spacing), 3*vert_margin_spacing)
-         .setSize(550, 320)
+         .setPosition((3*horiz_margin_spacing), 4*vert_margin_spacing)
+         .setSize(550, 75)
          .setItemHeight(15)
          .setBarHeight(15)
          .setColorBackground(color(255, 128))
@@ -105,7 +108,28 @@ public class Dashboard_view {
     order.addItem(api.getOrderByID(orderid).getString("order_items"),2);
     order.addItem(api.getOrderByID(orderid).getString("order_total"),3);
     order.addItem(api.getOrderByID(orderid).getString("order_placed"),4);
-    is_expanded = 1;
+    
+   
+      // create the buttons
+      cp5.addButton("accept")
+     .setValue(0)
+     .setPosition((3*horiz_margin_spacing) , 4*vert_margin_spacing + 75)
+     .setSize(100,19)
+     ;
+     
+    cp5.addButton("ready")
+     .setValue(0)
+     .setPosition((3*horiz_margin_spacing + 110) , 4*vert_margin_spacing + 75)
+     .setSize(100,19)
+     ;
+     
+     cp5.addButton("cancel")
+     .setValue(0)
+     .setPosition((3*horiz_margin_spacing + 220) , 4*vert_margin_spacing + 75)
+     .setSize(100,19)
+     ;
+     
+     is_expanded = 1;
   } 
   
   void resetSpacing(){

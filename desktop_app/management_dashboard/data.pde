@@ -1,5 +1,5 @@
-// Reading, writing and preparing data
-
+// Data focused on reading, writing and preparing data
+// Example use of abstract class for typedef
 static abstract class Status {
   static final String[] LIST = {Status.OPEN, Status.CLOSED, Status.PROCESSING,Status.INTRANSIT, Status.DELIVERED};
   static final String OPEN = "open";
@@ -8,7 +8,7 @@ static abstract class Status {
   static final String INTRANSIT = "intransit";
   static final String DELIVERED = "delivered";
 }
-
+// Example use of public class for metric as we use multiple (modular design)
 public class Metric {
   public String name;
   public float value;
@@ -18,7 +18,7 @@ public class Metric {
     value = _value;
   }  
 }
-
+// Simulate SoC b/w API and Database
 private class Database  {
   int max_orders = 100;
   JSONObject[] orders = new JSONObject[max_orders]; 
@@ -35,7 +35,6 @@ void refreshData()  {
     File [] files;
     dir= new File(dataPath(""));
     files= dir.listFiles();
-
     JSONObject json;
     for (int i = 0; i <= files.length - 1; i++)
    {
@@ -45,13 +44,11 @@ void refreshData()  {
       json = loadJSONObject(path);
       if (json != null){
       db.orders[i] = json;}  
-    }
-  }
-  
- }
-// this is our API class to ensure separation of concerns 
-public class OrderData  {
-  
+   }
+ } 
+}
+// this is our API class to ensure separation of concerns. User -> API -> DB
+public class OrderData  { 
   JSONObject[] getOrdersByStatus(String status)  {
     JSONObject[] ret = new JSONObject[0];
     for(JSONObject order: db.orders){
@@ -64,7 +61,7 @@ public class OrderData  {
     }
     return ret;
  }
- 
+ // API CALL 1
   JSONObject getOrderByID(String id)  {
     JSONObject ret = new JSONObject();
     for(JSONObject order: db.orders){
@@ -76,7 +73,7 @@ public class OrderData  {
     }
     return ret;
  }
- 
+ // API CALL 2
   void saveOrdertoDB(JSONObject order)  {
     if (order == null){
     return;} 
@@ -84,8 +81,13 @@ public class OrderData  {
     saveJSONObject(order, "data/" + order.getString("order_id") + ".json");
     }
  }
- 
+  // API CALL 3
   void updateOrderStatus(String id, String newstatus)  {
     JSONObject[] ret = new JSONObject[db.max_orders()];
+    
+    JSONObject order = getOrderByID(id);
+    // key, value
+    order.setString("order_status", newstatus);
+    client.publish("food_orders", order.toString());
  }
 }
