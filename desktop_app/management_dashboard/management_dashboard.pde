@@ -10,22 +10,19 @@ OrderData api = new OrderData();
 Database db = new Database();
 
 void setup() {
-  cp5 = new ControlP5(this);
-  size(900, 700);
-  // connect to the broker
-  client = new MQTTClient(this);
-  // connect to the broker and use a random string for clientid
-  client.connect("mqtt://try:try@broker.hivemq.com", "processing_desktop" + str(random(3)));
-  delay(100);
-  // refresh the dashboard with the information
-  updateDashboardData();
+    cp5 = new ControlP5(this);
+    size(900, 700);
+    // connect to the broker
+    client = new MQTTClient(this);
+    // connect to the broker and use a random string for clientid
+    client.connect("mqtt://try:try@broker.hivemq.com", "processing_desktop" + str(random(3)));
+    delay(100);
+    // refresh the dashboard with the information
+    updateDashboardData();
 }
 
 // we don't really use the draw function as controlP5 does the work
 void draw() {
-  background(0);
-  
-}
+    background(0);
 
-// to do:
-// Check if null is returned before performing operations on the new JSONObject in case the String content could not be parsed.
+}

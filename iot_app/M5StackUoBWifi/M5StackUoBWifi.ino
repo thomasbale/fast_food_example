@@ -1,8 +1,8 @@
 
 /*******************************************************************************************
- * 
+ *
  * Library includes.
- * 
+ *
  ******************************************************************************************/
 
 // M5 Stack system.
@@ -25,9 +25,9 @@ PubSubClient ps_client( wifi_client );
 
 
 /*******************************************************************************************
- * 
+ *
  * Global Variables
- * 
+ *
  ******************************************************************************************/
 
 
@@ -46,19 +46,19 @@ const char* password = "";                      // No password for UoB Guest
 
 // MQTT Settings
 const char* MQTT_clientname = "make_up_a_name"; // Make up a short name
-const char* MQTT_sub_topic = "SEGP_test_topic"; // Default pub/sub topics
-const char* MQTT_pub_topic = "SEGP_test_topic"; // You might want to create your own
+const char* MQTT_sub_topic = "food_orders"; // pub/sub topics
+const char* MQTT_pub_topic = "food_orders"; // You might want to create your own
 
 // Please leave this alone - to connect to HiveMQ
 const char* server = "broker.mqttdashboard.com";
 const int port = 1883;
-    
+
 
 // Instance of a Timer class, which allows us
 // a basic task scheduling of some code.  See
 // it used in Loop().
 // See Timer.h for more details.
-// Argument = millisecond period to schedule 
+// Argument = millisecond period to schedule
 // task.  Here, 2 seconds.
 Timer publishing_timer(2000);
 
@@ -67,9 +67,9 @@ Timer publishing_timer(2000);
 
 
 /*******************************************************************************************
- * 
+ *
  * Setup() and Loop()
- * 
+ *
  ******************************************************************************************/
 
 // Standard, one time setup function.
@@ -110,7 +110,7 @@ void setup() {
     setupMQTT();
 
 
-    // Maybe you need to write your own 
+    // Maybe you need to write your own
     // setup code after this...
 }
 
@@ -124,19 +124,19 @@ void loop() {
     reconnect();
   }
   ps_client.loop();
-  
+
 
   // This is an example of using our timer class to
   // publish a message every 2000 milliseconds, as
-  // set when we initalised the class above. 
+  // set when we initalised the class above.
   if( publishing_timer.isReady() ) {
 
       // Prepare a string to send.
       // Here we include millis() so that we can
-      // tell when new messages are arrive in hiveMQ  
+      // tell when new messages are arrive in hiveMQ
       String new_string = "hello?";
       new_string += millis();
-      publishMessage( new_string ); 
+      publishMessage( new_string );
 
       // Remember to reset your timer when you have
       // used it. This starts the clock again.
@@ -159,9 +159,9 @@ void loop() {
 
 
 /*******************************************************************************************
- * 
+ *
  * Helper functions after this...
- * 
+ *
  ******************************************************************************************/
 
 
@@ -171,11 +171,11 @@ void loop() {
 //
 // Note that, it publishes to MQTT_topic value
 //
-// Also, it doesn't seem to like a concatenated String 
+// Also, it doesn't seem to like a concatenated String
 // to be passed in directly as an argument like:
 // publishMessage( "my text" + millis() );
 // So instead, pre-prepare a String variable, and then
-// pass that. 
+// pass that.
 void publishMessage( String message ) {
 
   if( ps_client.connected() ) {
@@ -188,31 +188,31 @@ void publishMessage( String message ) {
       message.toCharArray( msg, message.length() );
 
       M5.Lcd.print(">> Tx: ");
-      M5.Lcd.println( message ); 
+      M5.Lcd.println( message );
 
       // Send
-      ps_client.publish( MQTT_pub_topic, msg ); 
-    } 
-     
+      ps_client.publish( MQTT_pub_topic, msg );
+    }
+
   } else {
     Serial.println("Can't publish message: Not connected to MQTT :( ");
-    
+
   }
 
-  
+
 }
 
 // This is where we pick up messages from the MQTT broker.
 // This function is called automatically when a message is
 // received.
-// 
+//
 // Note that, it receives from MQTT_topic value.
-// 
+//
 // Note that, you will receive messages from yourself, if
 // you publish a message, activating this function.
- 
+
 void callback(char* topic, byte* payload, unsigned int length) {
-  
+
   Serial.print("Message arrived [");
   Serial.print(topic);
   Serial.print("] ");
@@ -226,22 +226,22 @@ void callback(char* topic, byte* payload, unsigned int length) {
     Serial.print((char)payload[i]);
   }
   Serial.println();
-  
+
   M5.Lcd.print(" << Rx: " );
   M5.Lcd.println( in_str );
-  
-  
+
+
 }
 
 
 
 /*******************************************************************************************
- * 
- * 
+ *
+ *
  * You shouldn't need to change any code below this point!
- * 
- * 
- * 
+ *
+ *
+ *
  ******************************************************************************************/
 
 
@@ -272,7 +272,7 @@ void setupWifiWithPassword( ) {
 
     Serial.println("Connecting to network: " + String(ssid));
     WiFi.begin(ssid, password);
-    
+
     while (WiFi.status() != WL_CONNECTED) delay(500);
     Serial.println("IP address allocated: " + String(WiFi.localIP()));
 
@@ -281,28 +281,28 @@ void setupWifiWithPassword( ) {
 
 
 void reconnect() {
-  
+
   // Loop until we're reconnected
   while (!ps_client.connected()) {
-    
+
     Serial.print("Attempting MQTT connection...");
-    
+
     // Attempt to connect
     // Sometimes a connection with HiveMQ is refused
-    // because an old Client ID is not erased.  So to 
-    // get around this, we just generate new ID's 
+    // because an old Client ID is not erased.  So to
+    // get around this, we just generate new ID's
     // every time we need to reconnect.
     String new_id = generateID();
-    
+
     Serial.print("connecting with ID ");
     Serial.println( new_id );
 
     char id_array[ (int)new_id.length() ];
     new_id.toCharArray(id_array, sizeof( id_array ) );
-    
+
     if (ps_client.connect( id_array ) ) {
       Serial.println("connected");
-      
+
       // Once connected, publish an announcement...
       ps_client.publish( MQTT_pub_topic, "reconnected");
       // ... and resubscribe
@@ -324,8 +324,6 @@ String generateID() {
 
   String id_str = MQTT_clientname;
   id_str += random(0,9999);
-  
+
   return id_str;
 }
-
-
